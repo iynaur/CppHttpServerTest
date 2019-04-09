@@ -2,6 +2,7 @@
 #define SERVER_WIREDATA_H
 
 #include <microhttpd.h>
+#include <cstring>
 #include <string>
 #include <iostream>
 
@@ -29,7 +30,7 @@ public:
     std::string getVersion() const { return _version; }
     std::string getUploadData() const { return _upload_data; }
 
-private:
+public:
     struct MHD_Connection * _connection;
     std::string _url;
     std::string _method;
@@ -42,9 +43,14 @@ private:
 
 std::ostream& operator << (std::ostream& stream, const WireData& wire)
 {
-    stream << wire.getMethod() << ", "
-           << wire.getUrl()    << ", "
+//    MHD_get_connection_values(connection, )
+    stream << wire.getMethod() << ", " << std::endl
+           << wire.getUrl()    << ", " << std::endl
+           //<< (wire._upload_data ? wire._upload_data : ""    << ", ") << std::endl
+           << *(wire._upload_data_size)    << ", " << std::endl
+           //<< strlen(wire._upload_data)    << ", " << std::endl
            << wire.getVersion() << ", " << std::endl;
+    if (wire._upload_data) stream << wire._upload_data << ", " << std::endl;
     return stream;
 }
 
